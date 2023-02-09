@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    padding: 10px 0;
+}
+
+#root {
+}
+
+.app {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+}
+
+.title:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.post {
+    border: 2px solid #535bf2;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post__title {
+    font-size: 18px;
+}
+
+.post__title:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+.post:not(:last-child) {
+    margin-bottom: 10px;
+}
