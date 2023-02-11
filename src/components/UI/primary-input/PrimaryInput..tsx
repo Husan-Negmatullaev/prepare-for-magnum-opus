@@ -2,11 +2,9 @@ import React from 'react';
 
 import classes from "./PrimaryInput.module.css";
 
-interface IPrimaryInput extends React.ComponentPropsWithRef<"input"> {
+type typePrimaryInput = React.InputHTMLAttributes<HTMLInputElement>;
 
-}
-
-export const PrimaryInput = React.forwardRef<HTMLInputElement, IPrimaryInput>((props, ref) => {
+export const PrimaryInput = React.forwardRef<HTMLInputElement, typePrimaryInput>((props, ref) => {
     return (
         <input className={classes.input} {...props} ref={ref} />
     );

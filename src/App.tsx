@@ -1,56 +1,88 @@
-import React, {RefObject} from "react";
+import React from "react";
 
-import {IPostItem, PostItem} from "./components/post-item/PostItem";
+import {IPostItem} from "./components/post-item/PostItem";
+import {PostsList} from "./components/posts-list/PostsList";
+import {PostForm} from "./components/post-form/PostForm";
+import {sortTypes} from "./components/UI/primary-select/PrimarySelect";
+import {PostFilter} from "./components/post-filter/PostFilter";
+import {PrimaryModal} from "./components/UI/primary-modal/PrimaryModal";
+import {PrimaryButton} from "./components/UI/primary-button/PrimaryButton";
+import {Loader} from "./components/UI/loader/Loader";
+
+import {PostService} from "./service/api/post-service";
+import {usePosts} from "./hooks/usePosts";
+import {useFetching} from "./hooks/useFetching";
 
 import "./styles/style.css";
-import {PostsList} from "./components/posts-list/PostsList";
-import {PrimaryButton} from "./components/UI/primary-button/PrimaryButton";
-import {PrimaryInput} from "./components/UI/primary-input/PrimaryInput.";
+import {pageCount} from "./utils/pagination-count";
+import {Pagination} from "./components/pagination/pagination";
 
 function App() {
-  const [listPosts, setListPosts] = React.useState<IPostItem[]>([
-    {
-      id: 0,
-      title: "JavaScript",
-      description: "JavaScript - это язык прон=граммирования"
-    },
-    {
-      id: 1,
-      title: "JavaScript",
-      description: "JavaScript - это язык прон=граммирования"
-    },
-    {
-      id: 2,
-      title: "JavaScript",
-      description: "JavaScript - это язык прон=граммирования"
-    },
-  ]);
-  const [title, setTitle] = React.useState<string>("");
-  const bodyInputRef: RefObject<HTMLInputElement> = React.useRef(null);
+  const [listPosts, setListPosts] = React.useState<IPostItem[]>([]);
+  const [filter, setFilter] = React.useState<{ search: string; sort: sortTypes }>({search: "", sort: ""})
+  const [visible, setVisible] = React.useState<boolean>(false);
+  const [maxCountPages, setMaxCountPage] = React.useState<number>();
+  const [limitPage, setLimitPage] = React.useState<number>(10)
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
 
-  const createPost = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    console.log(title);
-    console.log(bodyInputRef.current?.value);
+  const [fetchPosts, isFetching, errorMessage] = useFetching(async (limit, page) => {
+    const response = await PostService.getAllPosts(limit, page);
+    setListPosts(response.data);
+    const totalCount = parseInt(response.headers["x-total-count"]);
+    setMaxCountPage(totalCount)
+    setLimitPage(pageCount(totalCount, limitPage));
+  });
+
+  const createPost = (newPost: IPostItem) => {
+    setListPosts([...listPosts, newPost]);
+    setVisible(prev => !prev);
   };
-  
+
+  React.useEffect(() => {
+    //@ts-ignore
+    fetchPosts(limitPage, currentPage);
+  }, [])
+
+  const deletePost = (post: IPostItem) => {
+    setListPosts(
+        listPosts.filter(item => item.id !== post.id)
+    );
+  };
+
+  const sortedAndSearchedPosts = usePosts(listPosts, filter.sort, filter.search);
+
+  const changeCurrentPagination = (pag: number) => {
+    setCurrentPage(pag);
+    fetchPosts(limitPage, pag);
+  }
+
   return (
     <main className="app">
-      <form action="#">
-        <PrimaryInput
-            type={"text"}
-            value={title}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
-            placeholder={"Название поста"}
-        />
-        <PrimaryInput
-            ref={bodyInputRef}
-            type={"text"}
-            placeholder={"Описание поста"}
-        />
-        <PrimaryButton onClick={createPost}>Создать пост</PrimaryButton>
-      </form>
-      <PostsList posts={listPosts} title={"Список постов"} />
+      <PrimaryButton style={{marginBottom: 10}} onClick={() => setVisible(prev => !prev)}>
+        Создать пост
+      </PrimaryButton>
+      <PrimaryModal changeVisible={setVisible} isShow={visible}>
+        <PostForm createPost={createPost} />
+      </PrimaryModal>
+      <hr style={{margin: "10px 0px"}} />
+      <PostFilter filter={filter} setFilter={setFilter} />
+      {
+        // @ts-ignore
+        errorMessage && <h1>{errorMessage}</h1>
+      }
+      {
+        isFetching ?
+          <div style={{textAlign: "center"}}>
+            <Loader />
+          </div>
+          :
+          <PostsList deletePost={deletePost} posts={sortedAndSearchedPosts} title={"Список постов"} />
+      }
+      <Pagination
+          currentPage={currentPage}
+          limitPage={limitPage}
+          changeCurrentPage={changeCurrentPagination}
+      />
     </main>
   )
 }

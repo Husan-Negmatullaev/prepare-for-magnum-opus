@@ -1,0 +1,18 @@
+.loader {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #535bf2;
+    border-top: 2px solid #ffffff;
+    animation: loader-rotate 2s infinite linear;
+}
+
+@keyframes loader-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

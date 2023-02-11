@@ -45,3 +45,32 @@ html, body {
 .post:not(:last-child) {
     margin-bottom: 10px;
 }
+
+.post-enter {
+    transform: scale(0);
+}
+.post-enter-active {
+    transform: scale(1);
+    transition: opacity 500ms ease-in, transform 500ms ease 0s;
+}
+.post-exit {
+
+}
+.post-exit-active {
+    transform: scale(0);
+    transition: opacity 500ms ease-in, transform 500ms ease 0s;
+}
+
+.pagination-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pagination-button.active {
+    border: 2px solid #353bc9;
+    font-weight: 600;
+}
+
+.pagination-button:not(:last-child) {
+    margin-right: 10px;
+}
