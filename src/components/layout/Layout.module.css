@@ -1,0 +1,25 @@
+.navbar {
+    background-color: #535bf2;
+}
+
+.navbar__list {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    list-style: none;
+    column-gap: 15px;
+    padding: 15px 20px;
+}
+
+.navbar__item {
+
+}
+
+.navbar__link {
+    color: #fff;
+    font-size: 24px;
+}
+
+.navbar__link:hover {
+    text-decoration: none;
+}

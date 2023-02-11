@@ -2,6 +2,7 @@ import React from "react";
 import {PrimaryButton} from "../UI/primary-button/PrimaryButton";
 import {usePagination} from "../../hooks/usePagination";
 
+// @ts-ignore
 export const Pagination = ({ limitPage, currentPage, changeCurrentPage }) => {
     const paginationButtons = usePagination(limitPage);
 

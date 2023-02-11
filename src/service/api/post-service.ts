@@ -15,4 +15,12 @@ export class PostService {
             }
         });
     }
+
+    static async getPostById(id: number) {
+        return await this._axios.get("/posts/" + id);
+    }
+
+    static async getCommentsById(id: number) {
+        return await this._axios.get(`/posts/${id}/comments`);
+    }
 }

@@ -6,13 +6,13 @@
 
 html, body {
     height: 100%;
-    padding: 10px 0;
 }
 
 #root {
 }
 
 .app {
+    padding: 10px 0;
     max-width: 800px;
     margin: 0 auto;
 }
@@ -40,6 +40,11 @@ html, body {
 
 .post__title:not(:last-child) {
     margin-bottom: 5px;
+}
+
+.post__actions {
+    display: flex;
+    column-gap: 5px;
 }
 
 .post:not(:last-child) {
